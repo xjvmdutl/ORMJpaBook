@@ -79,12 +79,31 @@ public class JpaMain {
 
             System.out.println("=================");
             */
+            /*
             Member member1 = em.find(Member.class,150L); //영속 상태
-            member1.setName("AAAAA");
+            member1.setUsername("AAAAA");
             //em.detach(member);//JPA가 더이상 관리하지 않는다
             em.clear();//모든 영속성 컨택스트 비워줌
             Member member2 = em.find(Member.class,150L); 
             //쿼리가 2번 실행해줌 /영속성 컨택스트를 비워줫기 떄문
+            tx.commit();
+            */
+            Member member1 = new Member();
+            member1.setUsername("A");
+            Member member2 = new Member();
+            member2.setUsername("B");
+            Member member3 = new Member();
+            member3.setUsername("C");
+
+            System.out.println("======================");
+            em.persist(member1);
+            em.persist(member2);
+            em.persist(member3);
+            System.out.println("member.id = " + member1.getId());
+            System.out.println("member.id = " + member2.getId());
+            System.out.println("member.id = " + member3.getId());
+            System.out.println("======================");
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();
