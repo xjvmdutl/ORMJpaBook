@@ -1,5 +1,6 @@
 package jpabook.jpashop;
 
+import jpabook.jpashop.domain.Book;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderItem;
@@ -29,13 +30,19 @@ public class JpaMain {
 
             //단방향 연관관계만 해도 개발을 진행하는데 전혀 문제가 없다.
             //이렇게 하면 양방향 관계가 전혀 필요가 없다.
+            /*
             Order order = new Order();
             em.persist(order);
 
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             em.persist(orderItem);
+             */
 
+            Book book = new Book();
+            book.setName("JPA");
+            book.setAuthor("김영한");
+            em.persist(book);
             tx.commit();
         }catch (Exception e){
             tx.rollback();

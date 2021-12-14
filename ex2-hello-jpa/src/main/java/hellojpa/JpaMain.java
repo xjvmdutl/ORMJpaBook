@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -31,6 +32,7 @@ public class JpaMain {
             Long findTeamId = findMember.getTeamId();
             Team findTeam = em.find(Team.class,findTeamId);
             */
+            /*
             Team team = new Team();
             team.setName("TeamA");
             //team.getMembers().add(member); //연관관계의 주인이 Member 객체의 team임으로 변경해 주어도 아무런 변화가 없다
@@ -54,7 +56,7 @@ public class JpaMain {
             System.out.println("=======");
             System.out.println("members = " + findTeam);
             System.out.println("=======");
-
+           */
             /*
             //조회
             Member findMember = em.find(Member.class,member.getId());
@@ -64,7 +66,39 @@ public class JpaMain {
                 System.out.println("m = " + m.getUsername());
             }
             */
+            /*
+            Member member = new Member();
+            member.setUsername("member1");
 
+            em.persist(member);
+
+            Team team = new Team();
+            team.setName("teamA");
+            team.getMembers().add(member); //Team 테이블에 insert 될게 아니다.
+            //member 테이블을 update 해준다, update 쿼리가 한번 더 실행된다.
+            //수십개의 테이블이 엮여있는 실무에서 내 엔티티가 아닌 다른테이블에 값이 넣어지면 유지보수가 힘들어진다.
+            em.persist(team);
+            */
+            /*
+            Movie movie = new Movie();
+            movie.setDirector("aaaa");
+            movie.setActor("bbbb");
+            movie.setName("바람과함께사라지다");
+            movie.setPrice(100000);
+            em.persist(movie);
+
+            em.flush();
+            em.clear();
+
+            Item item = em.find(Item.class,movie.getId());
+            System.out.println("findItem = " + item);
+
+             */
+            Member member = new Member();
+            member.setUsername("user1");
+            member.setCreateBy("kim");
+            member.setCreatedDate(LocalDateTime.now());
+            em.persist(member);
             tx.commit();
         }catch (Exception e){
             tx.rollback();

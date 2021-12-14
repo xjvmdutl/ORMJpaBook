@@ -3,12 +3,13 @@ package hellojpa;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 
 
 @Entity
-public class Member {
+public class Member extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -22,14 +23,35 @@ public class Member {
     @Column(name = "TEAM_ID")
     private Long teamId;
     */
-
+    /*
     @ManyToOne
     @JoinColumn(name = "TEAM_ID")
     private Team team;
+    */
+
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
+    private Team team;
+
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+    /*
+    @ManyToMany
+    @JoinTable(name = "MEMBER_PRODUCT")
+    private List<Product> products = new ArrayList<>();
+    */
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
+
+
+
+
 
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -43,26 +65,13 @@ public class Member {
         this.username = username;
     }
 
-    public Team getTeam() {
-        return team;
-    }
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
 
     public void changeTeam(Team team) {
         //연관관계편의메소드
-        this.team = team;
+        //this.team = team;
         team.getMembers().add(this); //나자신인스턴스를 넣어준다.//실수할 일이 줄어든다.
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", team=" + team +
-                '}';
-    }
+
 }
