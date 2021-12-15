@@ -1,22 +1,22 @@
-package jpabook.jpashop.domain;
-
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
+@MappedSuperclass//매핑 정보만 받는 클래스, 상속이 아니다.
 public abstract class BaseEntity {
+    //공통적으로 들어가는 속성들
 
-    private String createdBy;
+    private String createBy;
     private LocalDateTime createdDate;
     private String lastModifiedBy;
     private LocalDateTime lastModifiedDate;
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getCreateBy() {
+        return createBy;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
     }
 
     public LocalDateTime getCreatedDate() {
