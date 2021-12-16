@@ -1,13 +1,11 @@
-import domain.Child;
-import domain.Member;
-import domain.Parent;
-import domain.Team;
+import domain.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -138,7 +136,7 @@ public class JpaMain {
             //List<Member> members = em.createQuery("select m from Member m join fetch m.team",Member.class).getResultList();
             // jpql이 select쿼리로 실행이 되고, Member를 가지고 온다
             // Member를 가지고 왔더니 Team객체를 즉시로딩으로 호출하므로 N+1 문제가 발생한다.
-
+            /*
             Child child1 = new Child();
             Child child2 = new Child();
 
@@ -157,6 +155,96 @@ public class JpaMain {
             Parent findParent = em.find(Parent.class,parent.getId());
             //findParent.getChildList().remove(0);
             em.remove(findParent);
+
+             */
+            /*
+            Member member = new Member();
+            member.setUsername("hello");
+            member.setHomeAddress(new Address("city","street","zipcode"));
+            member.setWorkPeriod(new Period());
+
+            em.persist(member);
+             */
+            /*
+            Address address = new Address("city","street","10000");
+            Member member1 = new Member();
+            member1.setUsername("member1");
+            member1.setHomeAddress(address);
+            em.persist(member1);
+
+            Address newAddress = new Address("NewCity",address.getStreet(),address.getZipcode());
+            member1.setHomeAddress(newAddress);//값을 통채로 바꿔끼어야된다.
+
+             */
+            /*
+            Address copyAddress = new Address(address.getCity(),address.getStreet(),address.getZipcode());
+
+            Member member2 = new Member();
+            member2.setUsername("member2");
+            //member2.setHomeAddress(address); //같은 주소를 쓰고 있다.
+            member2.setHomeAddress(copyAddress); //복사를 해서 넣어주어야된다.
+            em.persist(member2);
+            */
+            //member1.getHomeAddress().setCity("newCity"); // 첫번째 맴버의 주소만 newCity로 바꾸고 싶다.
+            //Setter를 제거하니 불가능하다
+            //만약 같이 공유해서 변경하고 싶다면 Entity를 써야된다.
+            /*
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homeCity","street1","10000"));
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("피자");
+            member.getFavoriteFoods().add("족발");
+
+            member.getAddressesHistory().add(new AddressEntity("old1","street1","10000"));
+            member.getAddressesHistory().add(new AddressEntity("old2","street1","10000"));
+            //값타입 컬랙션이기 때문에 생명주기가 Member에 종속적이다.
+
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            System.out.println("================Start============");
+            Member findMember = em.find(Member.class,member.getId());  //컬렉션들은 기본적으로 지연로딩이다.
+            */
+            /*
+            List<Address> addressHistories = findMember.getAddressesHistory();
+            for(Address address : addressHistories){
+                System.out.println("address = " + address.getCity());
+            }
+            Set<String> favoriteFoods = findMember.getFavoriteFoods();
+            for(String favoriteFood : favoriteFoods){
+                System.out.println("favoriteFood = " + favoriteFood);
+            }
+            */
+            //값타입 같은경우 setter를 이용해서 하면 절대 안된다.//사이드 임펙트 발생된다.
+            //통으로 갈아 끼워야된다.
+            /*
+            Address a = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity",a.getStreet(),a.getZipcode()));
+            //치킨 -> 한식
+            findMember.getFavoriteFoods().remove("치킨"); //String 자체를 갈아 끼워야된다.
+            findMember.getFavoriteFoods().add("한식");
+
+            findMember.getAddressesHistory().remove(
+                    new Address("old1","street1","10000") //equals,hash코드로 값비교를 하기 때문에 잘 구현 해야한다.
+            );
+            findMember.getAddressesHistory().add(new Address("newCity","street1","10000"));
+            */
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homeCity","street1","10000"));
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("피자");
+            member.getFavoriteFoods().add("족발");
+
+            member.getAddressesHistory().add(new AddressEntity("old1","street1","10000"));
+            member.getAddressesHistory().add(new AddressEntity("old2","street1","10000"));
+            //값타입 컬랙션이기 때문에 생명주기가 Member에 종속적이다.
+
+            em.persist(member);
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();
@@ -191,7 +279,7 @@ public class JpaMain {
         String username = member.getUsername();
         System.out.println("username = "+ username);
 
-        Team team = member.getTeam();
-        System.out.println("team = "+ team.getName());
+        //Team team = member.getTeam();
+        //System.out.println("team = "+ team.getName());
     }
 }
