@@ -232,6 +232,7 @@ public class JpaMain {
             );
             findMember.getAddressesHistory().add(new Address("newCity","street1","10000"));
             */
+            /*
             Member member = new Member();
             member.setUsername("member1");
             member.setHomeAddress(new Address("homeCity","street1","10000"));
@@ -244,6 +245,42 @@ public class JpaMain {
             //값타입 컬랙션이기 때문에 생명주기가 Member에 종속적이다.
 
             em.persist(member);
+             */
+            /*
+            List<Member> result = em.createQuery(
+                    "select m from domain.Member m where m.username like '%KIM%'"
+                    ,Member.class
+            ).getResultList();
+            for(Member member : result){
+                System.out.println("domain.Member = " + member);
+            }
+            */
+            /*
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+
+            Root<Member> m = query.from(Member.class);
+
+            CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"),"kim"));
+            List<Member> resultList = em.createQuery(cq).getResultList();
+             */
+            /*
+            em.createNativeQuery("select MEMBER_ID, city,street,zipcode,USERNAME from MEMBER")
+                    .getResultList();
+             */
+            Member member = new Member();
+            member.setUsername("member1");
+            em.persist(member);
+
+            //flush -> commit, query
+            //entityManager 가 query 를 실행 시켰을떄도 flush를 동작시켜준다.
+            //JPA가 관리하게 되면 쿼리를 실행할때, Flush를 해주지만 connection을 내가 얻어서 할경우,영속성컨택스트를 수동으로 flush해줘야 된다.
+            List<Member> resultList = em.createNativeQuery("select MEMBER_ID, city,street,zipcode,USERNAME from MEMBER"
+                    ,Member.class)
+                    .getResultList();
+            for(Member member1 : resultList){
+                System.out.println("member = " + member1);
+            }
 
             tx.commit();
         }catch (Exception e){
