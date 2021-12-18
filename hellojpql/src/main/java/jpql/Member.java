@@ -8,6 +8,11 @@ import java.util.Set;
 
 
 @Entity
+@NamedQuery(
+        name = "Member.findByUsername",
+        query = "select m from Member m where m.username = :username"
+        //jpa가 미리 해당 쿼리를 파싱해서 가지고 있으려고 할 타임에 오류를 발견해서 에러를 발생시킨다.
+)
 public class Member{
 
     @Id
@@ -21,7 +26,7 @@ public class Member{
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
